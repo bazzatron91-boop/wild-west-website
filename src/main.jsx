@@ -100,7 +100,9 @@ function App() {
     <div>
       <header>
         <div className="nav-wrap">
-          <a href="#home" className="logo-box"><div><p>Wild West</p><small>Horticulture</small></div></a>
+          <a href="#home" className="logo-box" aria-label="Wild West Horticulture home">
+            <img src="/wild-west-logo.png" alt="Wild West Horticulture" />
+          </a>
           <nav>
             <a href="#home">Home</a><a href="#services">Services</a><a href="#about">About Us</a><a href="#gallery">Gallery</a><a href="#contact">Contact</a>
           </nav>
