@@ -8,12 +8,7 @@ import "./styles.css";
 
 const COMPANY_EMAIL = "wildwesthorticulture@gmail.com";
 const FORM_NAME = "wild-west-contact";
-
-function encodeFormData(data) {
-  return Object.keys(data)
-    .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
-    .join("&");
-}
+const WEB3FORMS_ACCESS_KEY = "29846d33-902a-408f-b9f1-19418fe755d6";
 
 function SectionTitle({ children }) {
   return (
@@ -70,27 +65,28 @@ function App() {
     setSubmitError("");
     setIsSubmitting(true);
 
-    const isLocalPreview = typeof window !== "undefined" && ["localhost", "127.0.0.1"].includes(window.location.hostname);
-
     try {
-      if (isLocalPreview) throw new Error("LOCAL_PREVIEW_NO_FORM_BACKEND");
-
-      const response = await fetch("/", {
+      const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: encodeFormData({ "form-name": FORM_NAME, ...form }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          subject: "New Wild West Horticulture enquiry",
+          from_name: form.name,
+          name: form.name,
+          phone: form.phone,
+          email: form.email || COMPANY_EMAIL,
+          message: form.message,
+        }),
       });
 
-      if (!response.ok) throw new Error("NETLIFY_FORM_SUBMISSION_FAILED");
+      const result = await response.json();
+      if (!response.ok || !result.success) throw new Error("WEB3FORMS_SUBMISSION_FAILED");
 
       setSubmitted(true);
       setForm({ name: "", phone: "", email: "", message: "" });
     } catch (error) {
-      setSubmitError(
-        error.message === "LOCAL_PREVIEW_NO_FORM_BACKEND"
-          ? "Form sending will not work in local preview. Deploy the site to Netlify, then enable form notifications to wildwesthorticulture@gmail.com."
-          : "Form sending is not active yet. In Netlify, check that Forms are detected and email notifications are enabled for wildwesthorticulture@gmail.com."
-      );
+      setSubmitError("Your message could not be sent right now. Please call or email us directly.");
     } finally {
       setIsSubmitting(false);
     }
@@ -120,7 +116,10 @@ function App() {
               <p className="hero-copy">Reliable, local and passionate about creating beautiful outdoor spaces.</p>
               <div className="hero-actions"><a href="#contact">Request a quote</a><a href="#services">Our services</a></div>
             </div>
-            <div className="hero-image"><div className="script-note">From small yards to big properties,<br />we’ve got you covered!</div><ImagePlaceholder label="Main garden image placeholder" large /></div>
+            <div className="hero-image">
+              <div className="script-note">From small yards to big properties,<br />we’ve got you covered!</div>
+              <img className="hero-garden-image" src="/main-garden-image.png" alt="Before and after garden work by Wild West Horticulture" />
+            </div>
           </div>
         </section>
 
@@ -164,8 +163,8 @@ function App() {
               <div className="contact-list"><p><Phone />0455 142 614</p><p><Mail />{COMPANY_EMAIL}</p><p><MapPin />Servicing Swan Valley</p></div>
             </div>
 
-            <form name={FORM_NAME} method="POST" data-netlify="true" netlify-honeypot="bot-field" onSubmit={handleSubmit}>
-              <input type="hidden" name="form-name" value={FORM_NAME} />
+            <form name={FORM_NAME} onSubmit={handleSubmit}>
+              <input type="hidden" name="access_key" value={WEB3FORMS_ACCESS_KEY} />
               <p className="hidden"><label>Don’t fill this out if you’re human: <input name="bot-field" /></label></p>
               <h3>Send us a message</h3>
               <div className="two-col"><input name="name" value={form.name} onChange={handleChange} required placeholder="Your Name *" /><input name="email" type="email" value={form.email} onChange={handleChange} placeholder="Email Address" /></div>
@@ -174,7 +173,7 @@ function App() {
               <button type="submit" disabled={isSubmitting}>{isSubmitting ? "Sending..." : "Send Message"}</button>
               {submitted && <p className="success">Thanks. Your enquiry has been sent.</p>}
               {submitError && <p className="error">{submitError}</p>}
-              <p className="form-note">Your message will be sent directly to our team once the site form backend is active.</p>
+              <p className="form-note">Your message will be sent directly to our team.</p>
             </form>
           </div>
         </section>
