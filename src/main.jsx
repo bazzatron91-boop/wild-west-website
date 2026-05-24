@@ -5,7 +5,7 @@ import {
   Mail, Phone, MapPin, Leaf, Scissors, Sprout, Droplets, Shovel,
   ImagePlus, TreePine, ShieldCheck, HeartHandshake,
   Star, CalendarDays, ClipboardList,
-  Wrench, Axe, Flower2, DraftingCompass, BrushCleaning, SprayCan, Tractor, Copy,
+  Wrench, Axe, Flower2, DraftingCompass, BrushCleaning, SprayCan, Tractor, Copy, ArrowUp,
 } from "lucide-react";
 import "./styles.css";
 
@@ -238,7 +238,7 @@ function App() {
             <div>
               <h2>About <span>Wild West</span> Horticulture</h2>
               <p><strong>Wild West Horticulture is a Perth-based horticulture and garden care business focused on quality work, practical advice, and reliable service.</strong></p>
-              <p>Run by a qualified horticulturist and fully insured, the business aims to give clients more than a quick tidy-up. The goal is to improve the health, presentation, and long-term performance of each garden.</p>
+              <p>Run by a qualified and fully insured horticulturist, the business aims to give clients more than a quick tidy-up. The goal is to improve the health, presentation, and long-term performance of each garden.</p>
               <div className="values">{values.map((value) => { const Icon = value.icon; return <div key={value.title}><Icon /><h3>{value.title}</h3><p>{value.text}</p></div>; })}</div>
             </div>
           </div>
@@ -332,6 +332,8 @@ function App() {
           </div>
         </section>
       </main>
+
+      <a className="back-to-top" href="#home" aria-label="Back to top"><ArrowUp /></a>
 
       <footer><p>Quality Work. Great Service. Wild West.</p><em>Proudly supporting our local community</em><small>© {new Date().getFullYear()} Wild West Horticulture. All rights reserved.</small></footer>
     </div>
