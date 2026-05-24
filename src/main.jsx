@@ -1,13 +1,17 @@
 import React, { useState } from "react";
 import { createRoot } from "react-dom/client";
+import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import {
   Mail, Phone, MapPin, Leaf, Scissors, Sprout, Droplets, Shovel,
   ImagePlus, TreePine, ShieldCheck, HeartHandshake,
-  Share2, Globe, Star, CalendarDays, ClipboardList,
+  Star, CalendarDays, ClipboardList,
+  Wrench, Axe, Flower2, DraftingCompass, BrushCleaning, SprayCan, Tractor, Copy,
 } from "lucide-react";
 import "./styles.css";
 
 const COMPANY_EMAIL = "wildwesthorticulture@gmail.com";
+const INSTAGRAM_URL = "https://www.instagram.com/wildwesthorticulture/";
+const FACEBOOK_URL = "https://www.facebook.com/profile.php?id=61589201173682";
 const FORM_NAME = "wild-west-contact";
 const WEB3FORMS_ACCESS_KEY = "29846d33-902a-408f-b9f1-19418fe755d6";
 
@@ -28,6 +32,14 @@ function ImagePlaceholder({ label, large = false }) {
   );
 }
 
+function GalleryImagePlaceholder({ label }) {
+  return (
+    <div className="image-placeholder gallery-extra-placeholder" aria-label={label}>
+      <ImagePlus />
+    </div>
+  );
+}
+
 function App() {
   const emptyForm = {
     name: "",
@@ -44,17 +56,22 @@ function App() {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [isGalleryExpanded, setIsGalleryExpanded] = useState(false);
+  const [emailCopied, setEmailCopied] = useState(false);
 
   const services = [
-    { title: "Lawn Mowing & Edging", description: "Reliable mowing, edging, trimming, and general lawn presentation for residential properties.", icon: Scissors },
+    { title: "Lawn Mowing & Edging", description: "Reliable mowing, edging, trimming, and general lawn presentation for residential properties.", icon: Tractor },
     { title: "Regular Garden Maintenance", description: "One-off, fortnightly, monthly, and seasonal garden care options for lawns, beds, pruning, weeds, and general presentation.", icon: CalendarDays },
-    { title: "Weeding & Weed Control", description: "Manual weeding, tidy garden beds, and suitable chemical application for weeds where appropriate.", icon: Leaf },
+    { title: "Weeding & Weed Control", description: "Manual weeding, tidy garden beds, and suitable chemical application for weeds where appropriate.", icon: SprayCan },
     { title: "Hedge Trimming & Pruning", description: "Shaping, reduction, tidy pruning, dead growth removal, and practical plant health advice.", icon: Scissors },
     { title: "Turf Installation", description: "Fresh lawn installs, soil preparation, levelling, turf laying, and aftercare advice.", icon: Sprout },
-    { title: "Irrigation Repairs", description: "Basic sprinkler checks, repairs, replacements, and garden watering improvements.", icon: Droplets },
+    { title: "Irrigation Repairs", description: "Basic sprinkler checks, repairs, replacements, and garden watering improvements.", icon: Wrench },
     { title: "Mulch, Soil & Garden Beds", description: "Mulching, soil improvement, garden bed cleanups, planting preparation, and edging refreshes.", icon: Shovel },
     { title: "Garden Clean-Ups", description: "Overgrown garden tidy-ups, green waste removal, end-of-lease presentation, and pre-sale outdoor refreshes.", icon: ClipboardList },
-    { title: "Small Tree Removal", description: "Removal of suitable small trees, with size and access dependent on assessment before the job is confirmed.", icon: TreePine },
+    { title: "Small Tree Removal", description: "Removal of suitable small trees, with size and access dependent on assessment before the job is confirmed.", icon: Axe },
+    { title: "Planting & Plant Replacement", description: "Planting and replacing suitable shrubs, natives, ornamentals, screening plants, and small feature plants, with practical advice on placement, soil conditions, and ongoing care.", icon: Flower2 },
+    { title: "Garden Design & Irrigation", description: "Small to medium garden designs from scratch, including layout planning, plant selection, irrigation installation, and practical horticultural advice to suit the property, conditions, and ongoing maintenance needs.", icon: DraftingCompass },
+    { title: "Pressure Cleaning", description: "Pressure cleaning for outdoor hard surfaces including paving, driveways, paths, patios, garden edging, and general exterior areas to help freshen up the property.", icon: BrushCleaning },
   ];
 
   const galleryItems = [
@@ -64,6 +81,21 @@ function App() {
     { title: "Mulch and planting job" },
     { title: "Hedge and pruning work", image: "/hedge-pruning-work.png", alt: "Before and after hedge pruning work" },
     { title: "Blue metal and weed mat job", image: "/blue-metal-weed-mat-job.png", alt: "Before and after blue metal and weed mat job" },
+    { title: "Retic Install" },
+    { title: "Tree Removal" },
+    { title: "Garden Design Plan" },
+    { title: "Garden Bed Install" },
+    { title: "Rose Prune" },
+    { title: "Pressure Cleaning" },
+  ];
+
+  const extraGalleryItems = [
+    "Additional gallery image 1",
+    "Additional gallery image 2",
+    "Additional gallery image 3",
+    "Additional gallery image 4",
+    "Additional gallery image 5",
+    "Additional gallery image 6",
   ];
 
   const values = [
@@ -74,9 +106,21 @@ function App() {
   ];
 
   const reviews = [
-    { source: "Google", text: "Client review coming soon.", name: "Google Review" },
-    { source: "Facebook", text: "Client review coming soon.", name: "Facebook Review" },
-    { source: "Google", text: "Client review coming soon.", name: "Google Review" },
+    {
+      source: "Google",
+      text: "Riley is passionate about his work, and a pleasure to deal with. He approaches each task working with you, and shares his experience to get results. Riley's done a number of garden tasks for me and can scale from yard clean to detailed work, or making a plan for long term remediation.",
+      name: "John",
+    },
+    {
+      source: "Google",
+      text: "Wild West Horticulture did a professional, high-quality job installing fresh Sir Walter grass in my backyard and weed matting with blue metal down the side of the house. Job was done quick and easy, no mess left behind, would hire again.",
+      name: "Josh",
+    },
+    {
+      source: "Google",
+      text: "We had a great experience with Riley today. He did an excellent job shaping the trees at the front of our house and tidying up the plants around our pool area. Everything looks neat, tidy, and well cared for. Friendly, professional service and great attention to detail, I highly recommend!",
+      name: "Jessica",
+    },
   ];
 
   const faqs = [
@@ -135,6 +179,16 @@ function App() {
     }
   };
 
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(COMPANY_EMAIL);
+      setEmailCopied(true);
+      window.setTimeout(() => setEmailCopied(false), 1800);
+    } catch (error) {
+      setEmailCopied(false);
+    }
+  };
+
   return (
     <div>
       <header>
@@ -143,7 +197,7 @@ function App() {
             <img src="/wild-west-logo.png" alt="Wild West Horticulture" />
           </a>
           <nav>
-            <a href="#home">Home</a><a href="#services">Services</a><a href="#about">About Us</a><a href="#gallery">Gallery</a><a href="#reviews">Reviews</a><a href="#contact">Contact</a>
+            <a href="#home">Home</a><a href="#services">Services</a><a href="#about">About Us</a><a href="#gallery">Gallery</a><a href="#reviews">Reviews</a><a href="#faq">FAQ</a><a href="#contact">Contact</a>
           </nav>
           <a href="#contact" className="top-button">Get in touch</a>
         </div>
@@ -157,7 +211,7 @@ function App() {
               <h1>Outdoor Spaces.<span>Wildly Better.</span></h1>
               <div className="leaf-line left"><span /><Leaf /><span /></div>
               <p className="hero-copy">Reliable, local and passionate about creating beautiful outdoor spaces.</p>
-              <div className="hero-actions"><a href="#contact">Request a quote</a><a href="#services">Our services</a></div>
+              <div className="hero-actions"><a href="#contact">Request a quote</a></div>
             </div>
             <div className="hero-image">
               <div className="script-note">From small yards to big properties,<br />we’ve got you covered!</div>
@@ -201,7 +255,15 @@ function App() {
                   <p>{item.title}</p>
                 </div>
               ))}
+              {isGalleryExpanded && extraGalleryItems.map((item) => (
+                <div className="gallery-card gallery-card-unlabelled" key={item}>
+                  <GalleryImagePlaceholder label={item} />
+                </div>
+              ))}
             </div>
+            <button className="gallery-toggle" type="button" onClick={() => setIsGalleryExpanded((current) => !current)}>
+              {isGalleryExpanded ? "Show less" : "See more"}
+            </button>
           </div>
         </section>
 
@@ -242,10 +304,13 @@ function App() {
               <h2>Contact Us</h2>
               <p>Send through your name, contact details, suburb, and a quick description of the work needed. Photos are helpful when requesting a quote.</p>
               <div className="contact-list">
-                <p><Phone />0455 142 614</p>
-                <p><Mail />{COMPANY_EMAIL}</p>
-                <p><Share2 /><a href="#" aria-label="Wild West Horticulture Instagram">Instagram</a></p>
-                <p><Globe /><a href="#" aria-label="Wild West Horticulture Facebook">Facebook</a></p>
+                <p><Phone /><a href="tel:0455142614">0455 142 614</a></p>
+                <p className="email-contact">
+                  <Mail /><a href={`mailto:${COMPANY_EMAIL}`}>{COMPANY_EMAIL}</a>
+                  <button type="button" onClick={handleCopyEmail} aria-label="Copy email address" title="Copy email address"><Copy />{emailCopied && <span>Copied</span>}</button>
+                </p>
+                <p><span className="brand-icon"><FaInstagram /></span><a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" aria-label="Wild West Horticulture Instagram">Instagram</a></p>
+                <p><span className="brand-icon"><FaFacebookF /></span><a href={FACEBOOK_URL} target="_blank" rel="noreferrer" aria-label="Wild West Horticulture Facebook">Facebook</a></p>
               </div>
             </div>
 
