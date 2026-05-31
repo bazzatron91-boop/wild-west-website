@@ -7,7 +7,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(244,241,234,.96);border-
 .logo-box{width:156px;height:112px;display:flex;align-items:center;justify-content:center;background:#eee;padding:4px;overflow:hidden}
 .logo-box img{display:block;width:100%;height:100%;object-fit:contain}
 nav{display:flex;gap:20px;font-size:14px;font-weight:900;text-transform:uppercase}
-nav a:hover,nav a:first-child{color:#5c8f22}
+nav a:hover,nav a.active{color:#5c8f22}
 .top-button,.hero-actions a:first-child,form button{background:#5c8f22;color:white;padding:14px 22px;font-weight:900;text-transform:uppercase;box-shadow:0 4px 12px #0002}
 .texture{position:relative;background:#f4f1ea}
 .texture:before{content:"";position:absolute;inset:0;opacity:.08;background-image:radial-gradient(#151916 1px,transparent 1px);background-size:12px 12px;pointer-events:none}

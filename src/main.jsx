@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import {
@@ -14,6 +14,15 @@ const INSTAGRAM_URL = "https://www.instagram.com/wildwesthorticulture/";
 const FACEBOOK_URL = "https://www.facebook.com/profile.php?id=61589201173682";
 const FORM_NAME = "wild-west-contact";
 const WEB3FORMS_ACCESS_KEY = "29846d33-902a-408f-b9f1-19418fe755d6";
+const NAV_ITEMS = [
+  { id: "home", label: "Home" },
+  { id: "services", label: "Services" },
+  { id: "about", label: "About Us" },
+  { id: "gallery", label: "Gallery" },
+  { id: "reviews", label: "Reviews" },
+  { id: "faq", label: "FAQ" },
+  { id: "contact", label: "Contact" },
+];
 
 function SectionTitle({ children }) {
   return (
@@ -58,6 +67,7 @@ function App() {
   const [submitError, setSubmitError] = useState("");
   const [isGalleryExpanded, setIsGalleryExpanded] = useState(false);
   const [emailCopied, setEmailCopied] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
 
   const services = [
     { title: "Lawn Mowing & Edging", description: "Reliable mowing, edging, trimming, and general lawn presentation for residential properties.", icon: Tractor },
@@ -133,6 +143,23 @@ function App() {
     { question: "How do I request a quote?", answer: "Use the contact form, call, or email with your suburb, contact details, and a short description of the work needed." },
   ];
 
+  useEffect(() => {
+    const sections = NAV_ITEMS.map((item) => document.getElementById(item.id)).filter(Boolean);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntry = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((first, second) => second.intersectionRatio - first.intersectionRatio)[0];
+
+        if (visibleEntry) setActiveSection(visibleEntry.target.id);
+      },
+      { rootMargin: "-35% 0px -50% 0px", threshold: [0.15, 0.35, 0.6] }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setForm((currentForm) => ({ ...currentForm, [name]: value }));
@@ -194,14 +221,16 @@ function App() {
             <img src="/wild-west-logo.png" alt="Wild West Horticulture" />
           </a>
           <nav>
-            <a href="#home">Home</a><a href="#services">Services</a><a href="#about">About Us</a><a href="#gallery">Gallery</a><a href="#reviews">Reviews</a><a href="#faq">FAQ</a><a href="#contact">Contact</a>
+            {NAV_ITEMS.map((item) => (
+              <a className={activeSection === item.id ? "active" : ""} href={`#${item.id}`} key={item.id}>{item.label}</a>
+            ))}
           </nav>
           <a href="#contact" className="top-button">Get in touch</a>
         </div>
       </header>
 
-      <main id="home">
-        <section className="hero texture">
+      <main>
+        <section id="home" className="hero texture">
           <div className="hero-grid">
             <div>
               <p className="kicker">ESTD 2026 · Swan Valley</p>
