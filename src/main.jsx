@@ -77,15 +77,15 @@ function App() {
   const galleryItems = [
     { title: "Before & after lawn repair" },
     { title: "Fresh turf installation", image: "/fresh-turf-installation.png", alt: "Before and after fresh turf installation" },
-    { title: "Garden tidy-up" },
-    { title: "Mulch and planting job" },
-    { title: "Hedge and pruning work", image: "/hedge-pruning-work.png", alt: "Before and after hedge pruning work" },
+    { title: "Garden tidy-up", image: "/garden-tidy-up.png", alt: "Before and after garden tidy-up" },
+    { title: "Mulch and planting job", image: "/mulch-planting-job.png", alt: "Mulch and planting job", layout: "wide" },
+    { title: "Hedge and pruning work", image: "/wild-hedges-tamed.png", alt: "Wild hedges tamed before and after" },
     { title: "Blue metal and weed mat job", image: "/blue-metal-weed-mat-job.png", alt: "Before and after blue metal and weed mat job" },
-    { title: "Retic Install" },
+    { title: "Retic Install", image: "/retic-install.png", alt: "Retic installation and garden bed work", layout: "wide" },
     { title: "Tree Removal" },
-    { title: "Garden Design Plan" },
+    { title: "Garden Design Plan", image: "/garden-design-plan.png", alt: "Garden design plan before and after", layout: "wide" },
     { title: "Garden Bed Install" },
-    { title: "Rose Prune" },
+    { title: "Rose Prune", image: "/rose-prune.png", alt: "Before and after rose prune" },
     { title: "Pressure Cleaning" },
   ];
 
@@ -250,7 +250,7 @@ function App() {
             <p className="center-copy">A selection of previous work completed for local clients, showing the care, detail, and practical improvements Wild West Horticulture brings to outdoor spaces.</p>
             <div className="gallery-grid">
               {galleryItems.map((item, index) => (
-                <div className="gallery-card" key={item.title}>
+                <div className={`gallery-card ${item.layout === "wide" ? "wide" : ""}`} key={item.title}>
                   {item.image ? <img className="gallery-image" src={item.image} alt={item.alt} /> : <ImagePlaceholder label={`Photo ${index + 1}`} />}
                   <p>{item.title}</p>
                 </div>
