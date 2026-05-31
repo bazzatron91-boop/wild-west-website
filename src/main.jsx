@@ -81,11 +81,8 @@ function App() {
     { title: "Mulch and planting job", image: "/mulch-planting-job.png", alt: "Mulch and planting job", layout: "wide" },
     { title: "Hedge and pruning work", image: "/wild-hedges-tamed.png", alt: "Wild hedges tamed before and after" },
     { title: "Blue metal and weed mat job", image: "/blue-metal-weed-mat-job.png", alt: "Before and after blue metal and weed mat job" },
-    { title: "Retic Install", image: "/retic-install.png", alt: "Retic installation and garden bed work", layout: "wide" },
     { title: "Tree Removal" },
-    { title: "Garden Design Plan", image: "/garden-design-plan.png", alt: "Garden design plan before and after", layout: "wide" },
     { title: "Garden Bed Install" },
-    { title: "Rose Prune", image: "/rose-prune.png", alt: "Before and after rose prune" },
     { title: "Pressure Cleaning" },
   ];
 
@@ -249,9 +246,9 @@ function App() {
             <SectionTitle>Gallery</SectionTitle>
             <p className="center-copy">A selection of previous work completed for local clients, showing the care, detail, and practical improvements Wild West Horticulture brings to outdoor spaces.</p>
             <div className="gallery-grid">
-              {galleryItems.map((item, index) => (
+              {galleryItems.filter((item) => item.image).map((item) => (
                 <div className={`gallery-card ${item.layout === "wide" ? "wide" : ""}`} key={item.title}>
-                  {item.image ? <img className="gallery-image" src={item.image} alt={item.alt} /> : <ImagePlaceholder label={`Photo ${index + 1}`} />}
+                  <img className="gallery-image" src={item.image} alt={item.alt} />
                   <p>{item.title}</p>
                 </div>
               ))}
